@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SearchEngine — Your Personal AI News Search</title>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+  <!-- ── Homepage (centered search) ──────────────────── -->
+  <div id="home-view" class="home-wrapper">
+    <div class="home-brand">
+      <h1>
+        <span class="c1">S</span>earch<span class="c2">E</span>ngin<span class="c3">e</span>
+      </h1>
+      <div class="tagline">Your personal AI news search engine</div>
+    </div>
+
+    <form id="home-form" class="search-box" onsubmit="return false;">
+      <div class="search-input-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <input id="home-q" type="text" placeholder="Search AI news..." autocomplete="off"/>
+        <button type="button" class="clear-btn" aria-label="Clear">&times;</button>
+      </div>
+
+      <div class="home-filters">
+        <select id="home-source">
+          <option value="">All sources</option>
+        </select>
+        <input id="home-hours" type="number" value="168" min="1" max="720" title="Hours lookback"/>
+      </div>
+
+      <div class="home-actions">
+        <button type="submit" class="btn btn-primary" id="home-search-btn">Search</button>
+      </div>
+    </form>
+
+    <footer class="footer" style="position:fixed;bottom:0;left:0;right:0;">
+      Self-hosted on GitHub Pages &middot; No third-party search APIs
+    </footer>
+  </div>
+
+  <!-- ── Results page ────────────────────────────────── -->
+  <div id="results-view" class="results-page" style="display:none;">
+    <!-- Top bar -->
+    <div class="top-bar">
+      <span class="brand-sm">
+        <a href="#" id="back-home">
+          <span class="c1">S</span>earch<span class="c2">E</span>ngin<span class="c3">e</span>
+        </a>
+      </span>
+
+      <form id="results-form" class="search-box" onsubmit="return false;">
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input id="results-q" type="text" placeholder="Search AI news..." autocomplete="off"/>
+          <button type="button" class="clear-btn" aria-label="Clear">&times;</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <label>Source:
+        <select id="filter-source"></select>
+      </label>
+      <label>Past
+        <input id="filter-hours" type="number" value="168" min="1" max="720"/>
+        hours
+      </label>
+      <button class="apply-btn" id="filter-apply">Apply</button>
+    </div>
+
+    <!-- Results area -->
+    <div class="results-body">
+      <div id="results-stats" class="results-stats"></div>
+      <div id="results-list"></div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Loading articles...</p>
+    </div>
+
+    <footer class="footer">
+      Self-hosted on GitHub Pages &middot; No third-party search APIs
+    </footer>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

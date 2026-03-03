@@ -16,4 +16,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Compile check
-        run: python -m py_compile app/*.py app/ingestors/*.py
+        run: python -m py_compile app/*.py app/ingestors/*.py scripts/*.py

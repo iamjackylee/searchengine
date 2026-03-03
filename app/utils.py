@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-TRACKING_PREFIXES = ("utm_", "fbclid", "gclid", "mc_cid", "mc_eid")
+from app.constants import TRACKING_PREFIXES
 
 
 def canonicalize_url(url: str) -> str:

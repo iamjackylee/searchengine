@@ -1,0 +1,70 @@
+# Ingest news and deploy the static search site to GitHub Pages.
+#
+# How it works:
+#   1. Fetches existing articles.json from the currently deployed site
+#   2. Runs the ingestion script (RSS + GDELT → JSON)
+#   3. Merges new articles, deduplicates, prunes >30 days
+#   4. Deploys the site/ folder to GitHub Pages
+#
+# The data never pollutes git history — it only lives in the
+# deployed Pages artifact.
+#
+# Triggers:
+#   - Every 6 hours (scheduled)
+#   - Manual (workflow_dispatch)
+#   - On push to main (so the site redeploys on code changes)
+
+name: Deploy
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false  # let in-flight deploy finish
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests feedparser pyyaml python-dateutil
+
+      - name: Download existing articles from live site
+        run: |
+          PAGES_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/data/articles.json"
+          echo "Trying $PAGES_URL ..."
+          curl -sf "$PAGES_URL" -o site/data/articles.json || echo '[]' > site/data/articles.json
+          echo "Existing articles: $(python3 -c "import json; print(len(json.load(open('site/data/articles.json'))))")"
+
+      - name: Ingest new articles
+        run: python scripts/ingest_json.py
+        env:
+          GDELT_TIMESPAN: 7d
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

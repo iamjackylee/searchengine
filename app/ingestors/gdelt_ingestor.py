@@ -4,9 +4,8 @@ import requests
 from sqlalchemy.orm import Session
 
 from app.config import settings
+from app.constants import GDELT_DOC_API
 from app.ingestors.common import get_or_create_source, parse_datetime, store_article
-
-GDELT_DOC_API = "https://api.gdeltproject.org/api/v2/doc/doc"
 
 
 def ingest_gdelt(db: Session, gdelt_sources: list[dict], default_timespan: str | None = None) -> int:
