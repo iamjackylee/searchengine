@@ -1,0 +1,31 @@
+name: Hourly Ingest
+
+on:
+  schedule:
+    - cron: '17 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: hourly-ingest
+  cancel-in-progress: true
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    if: ${{ secrets.DATABASE_URL != '' }}
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      API_TOKEN: ${{ secrets.API_TOKEN }}
+      GDELT_TIMESPAN: 7d
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Initialize DB schema
+        run: python -m app.init_db
+      - name: Ingest news once
+        run: python -m app.ingest_once
