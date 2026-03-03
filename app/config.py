@@ -6,9 +6,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Settings:
-    database_url: str = os.getenv(
-        "DATABASE_URL", "postgresql+psycopg2://ai_news:ai_news@localhost:5432/ai_news"
-    )
+    database_url: str = os.getenv("DATABASE_URL", "")
     default_since_hours: int = int(os.getenv("DEFAULT_SINCE_HOURS", "24"))
     ingest_interval_minutes: int = int(os.getenv("INGEST_INTERVAL_MINUTES", "15"))
     gdelt_timespan: str = os.getenv("GDELT_TIMESPAN", "7d")
